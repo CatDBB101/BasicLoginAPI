@@ -6,7 +6,7 @@ const expressApp = express();
 expressApp.use(express.json());
 expressApp.use(cookieParser());
 
-function  checkAccount(username, password) {
+function checkAccount(username, password) {
     for ( var i = 0 ; i < account_database.length ; i++ ) {
         var user_data = account_database[i];
         if (user_data.username == username && user_data.password == password) {
@@ -15,6 +15,19 @@ function  checkAccount(username, password) {
     }
     return false;
 }
+
+function getAccountFromId(id) {
+    for ( var i = 0 ; i < account_database.length ; i++ ) {
+        var user_data = account_database[i];
+        if (user_data.userid == id) {
+            return {
+                username : user_data.username,
+                password : user_data.password
+            };
+        }
+    }
+    return false;
+} 
 
 var account_database = [
     {
@@ -46,12 +59,8 @@ expressApp.get("/login" , (req, res) => {
 expressApp.get("/menu" , (req,res) => {
     var user_cookies = req.cookies;
     console.log(user_cookies);
-    if (user_cookies.LoginKey != undefined) {
-        if ( checkAccount(user_cookies.LoginKey.username,user_cookies.LoginKey.password) ) {
-            res.send(["Welcome back "+user_cookies.LoginKey.username]);
-        } else {
-            res.send([402]);
-        }
+    if (getAccountFromId(user_cookies.LoginKey)) {
+        res.send(["Welcome back "+getAccountFromId(user_cookies.LoginKey).username])
     } else {
         res.send(["You must login first"]);
     }
