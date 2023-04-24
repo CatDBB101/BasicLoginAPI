@@ -42,7 +42,7 @@ var account_database = [
     }
 ];
 
-expressApp.get("/login" , (req, res) => {
+expressApp.get("/login" ,cors(), (req, res) => {
     var username = req.body.username;
     var password = req.body.password;
     console.log(username, password);
@@ -56,7 +56,7 @@ expressApp.get("/login" , (req, res) => {
     res.end();
 });
 
-expressApp.get("/menu" , (req,res) => {
+expressApp.get("/menu" ,cors() , (req,res) => {
     var user_cookies = req.cookies;
     console.log(user_cookies);
     if (getAccountFromId(user_cookies.LoginKey)) {
